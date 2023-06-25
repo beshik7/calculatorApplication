@@ -1,6 +1,5 @@
 package com.example.calculator;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,11 +51,13 @@ public class CalculatorController {
         if (!num1.isPresent() || !num2.isPresent()) {
             return "Ошибка: Не все параметры предоставлены";
         }
-        if (num2.get() == 0) {
-            return "Деление на 0 запрещено";
+        try {
+            double result = calculatorService.divide(num1.get(), num2.get());
+            return String.format("%.2f / %.2f = %.2f", num1.get(), num2.get(), result);
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
         }
-        double result = calculatorService.divide(num1.get(), num2.get());
-        return String.format("%.2f / %.2f = %.2f", num1.get(), num2.get(), result);
+
     }
 }
 
